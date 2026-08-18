@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#152e28">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/svg+xml" href="assets/pwa/icon.svg">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="assets/pwa/icon.svg">
     <title>Flash Exterminator</title>
     <script>
         window.RufflePlayer = window.RufflePlayer || {};
@@ -15,7 +21,7 @@
             ]]
         };
     </script>
-    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle" crossorigin="anonymous"></script>
     <style>
         :root {
             --cabinet: #d8caaa;
@@ -55,6 +61,14 @@
             letter-spacing: .1em;
             text-shadow: 2px 2px 0 var(--yellow);
         }
+
+        .title-with-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: .35em;
+        }
+
+        .project-logo { width: 1em; height: 1em; }
 
         .monitor {
             position: relative;
@@ -114,6 +128,11 @@
         }
 
         .monitor:fullscreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(18px, 4vw, 32px);
             width: 100vw;
             height: 100dvh;
             padding: clamp(18px, 4vw, 48px);
@@ -124,13 +143,9 @@
         }
 
         .monitor:fullscreen .screen {
-            position: absolute;
-            top: 50%;
-            left: 50%;
             width: min(88vw, 680px);
             min-height: 0;
             aspect-ratio: 680 / 500;
-            transform: translate(-50%, -50%);
             border-color: #364331;
             border-radius: 8px;
         }
@@ -139,11 +154,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: absolute;
-            bottom: clamp(18px, 4vw, 48px);
-            left: 50%;
             width: min(88vw, 680px);
-            transform: translateX(-50%);
         }
 
         .gameboy-controls .arrow-keys { grid-template-columns: repeat(3, clamp(42px, 11vw, 68px)); gap: 6px; }
@@ -303,6 +314,8 @@
         dialog::backdrop { background: rgba(26, 20, 14, .72); }
         .modal-content { padding: 24px; text-align: left; }
         .modal-content h2 { margin: 0 0 14px; color: #b63e29; font-size: 1.2rem; }
+        .modal-content .modal-title { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+        .modal-title .project-logo { order: 2; width: 4em; height: 4em; }
         .modal-content p { font-size: .82rem; line-height: 1.55; }
         .modal-content ul { padding-left: 20px; font-size: .78rem; line-height: 1.6; }
         .close-button { float: right; border: 0; color: #fff6d7; padding: 7px 11px; font: bold .7rem "Courier New", monospace; cursor: pointer; background: #b63e29; }
@@ -330,7 +343,7 @@
 </head>
 <body>
     <main class="arcade">
-        <h1>Flash Exterminator</h1>
+        <h1 class="title-with-logo"><img class="project-logo" src="assets/pwa/icon.svg" alt="">Flash Exterminator</h1>
         <section class="monitor" aria-label="Tela do jogo">
             <div class="screen">
                 <div id="game-player" aria-label="Jogo Flash Exterminator"></div>
@@ -373,7 +386,7 @@
     <dialog id="project-info" aria-labelledby="project-info-title">
         <div class="modal-content">
             <button class="close-button" type="button">FECHAR</button>
-            <h2 id="project-info-title">Sobre o projeto</h2>
+            <h2 class="modal-title" id="project-info-title"><img class="project-logo" src="assets/pwa/icon.svg" alt="">Sobre o projeto</h2>
             <p>Flash Exterminator é um jogo espacial criado em Adobe Flash e executado no navegador pelo emulador Ruffle. Ele foi desenvolvido como projeto da disciplina Desenvolvimento de Jogos para Web I, do curso técnico em Jogos Digitais no ano de 2016.</p>
             <h2>Como jogar</h2>
             <ul>
@@ -466,6 +479,10 @@
                 sendGameKey(button.dataset.key, 'keyup');
             });
         });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
+        }
     </script>
 </body>
 </html>
