@@ -409,7 +409,6 @@
         const monitor = document.querySelector('.monitor');
         const gameboyToggle = document.querySelector('.gameboy-toggle');
         const gameboyExit = document.querySelector('.gameboy-exit');
-        const gameboyStart = document.querySelector('.gameboy-start');
 
         const ruffle = window.RufflePlayer?.newest();
         if (ruffle) {
@@ -431,14 +430,13 @@
 
         gameboyToggle.addEventListener('click', () => monitor.requestFullscreen());
         gameboyExit.addEventListener('click', () => document.exitFullscreen());
-        gameboyStart.addEventListener('click', () => document.exitFullscreen());
 
         const controlKeys = {
-            ArrowUp: { key: 'ArrowUp', code: 'ArrowUp' },
-            ArrowLeft: { key: 'ArrowLeft', code: 'ArrowLeft' },
-            ArrowDown: { key: 'ArrowDown', code: 'ArrowDown' },
-            ArrowRight: { key: 'ArrowRight', code: 'ArrowRight' },
-            Space: { key: ' ', code: 'Space' }
+            ArrowUp: { key: 'ArrowUp', code: 'ArrowUp', keyCode: 38, which: 38 },
+            ArrowLeft: { key: 'ArrowLeft', code: 'ArrowLeft', keyCode: 37, which: 37 },
+            ArrowDown: { key: 'ArrowDown', code: 'ArrowDown', keyCode: 40, which: 40 },
+            ArrowRight: { key: 'ArrowRight', code: 'ArrowRight', keyCode: 39, which: 39 },
+            Space: { key: ' ', code: 'Space', keyCode: 32, which: 32 }
         };
 
         function sendGameKey(keyName, type) {
