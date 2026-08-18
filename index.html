@@ -43,6 +43,7 @@
 
         .arcade {
             width: min(92vw, 790px);
+            min-width: 0;
             padding: clamp(20px, 4vw, 42px) 0 32px;
             text-align: center;
         }
@@ -64,15 +65,22 @@
             box-shadow: inset 5px 5px 0 #fff3d6, inset -6px -7px 0 var(--cabinet-shadow), 10px 12px 0 #735f49;
         }
 
-        .monitor::after {
-            content: "FLASH EXTERMINATOR";
+        .gameboy-toggle {
             position: absolute;
-            right: 24px;
-            bottom: 7px;
-            font-size: .55rem;
-            font-weight: bold;
-            letter-spacing: .12em;
+            top: 15px;
+            right: 19px;
+            z-index: 3;
+            border: 3px solid #473c31;
+            border-radius: 6px;
+            padding: 7px 12px;
+            color: #fff6d7;
+            font: bold .58rem "Courier New", monospace;
+            cursor: pointer;
+            background: #4f6655;
+            box-shadow: inset 1px 1px #a3b69d, 2px 3px #493c2e;
         }
+
+        .gameboy-controls { display: none; }
 
         .screen {
             position: relative;
@@ -94,8 +102,8 @@
             background: repeating-linear-gradient(0deg, transparent 0 3px, #c4ffe6 3px 4px);
         }
 
-        .screen > object,
-        .screen > ruffle-player {
+        .screen > #game-player,
+        .screen ruffle-player {
             position: absolute;
             inset: 0;
             display: block !important;
@@ -105,6 +113,72 @@
             max-height: none !important;
         }
 
+        .monitor:fullscreen {
+            width: 100vw;
+            height: 100dvh;
+            padding: clamp(18px, 4vw, 48px);
+            border: 0;
+            border-radius: 0;
+            background: #a7ba80;
+            box-shadow: inset 0 0 0 8px #556345;
+        }
+
+        .monitor:fullscreen .screen {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(88vw, 680px);
+            min-height: 0;
+            aspect-ratio: 680 / 500;
+            transform: translate(-50%, -50%);
+            border-color: #364331;
+            border-radius: 8px;
+        }
+
+        .monitor:fullscreen .gameboy-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: absolute;
+            bottom: clamp(18px, 4vw, 48px);
+            left: 50%;
+            width: min(88vw, 680px);
+            transform: translateX(-50%);
+        }
+
+        .gameboy-controls .arrow-keys { grid-template-columns: repeat(3, clamp(42px, 11vw, 68px)); gap: 6px; }
+        .gameboy-controls .key { height: clamp(42px, 11vw, 68px); border-radius: 50%; font-size: 1rem; background: #566748; }
+        .gameboy-controls .key:active { background: #e85f73; }
+        .gameboy-start {
+            align-self: flex-end;
+            border: 3px solid #443f3b;
+            border-radius: 12px;
+            padding: 8px 14px;
+            color: #fff6d7;
+            font: bold .7rem "Courier New", monospace;
+            cursor: pointer;
+            touch-action: manipulation;
+            background: #596b4c;
+            box-shadow: inset 2px 2px #91a17b, 2px 3px #4c4540;
+        }
+        .gameboy-start:active { transform: translateY(2px); box-shadow: inset 2px 2px #435137, 1px 2px #4c4540; }
+        .gameboy-actions { display: flex; gap: 16px; align-items: center; }
+        .gameboy-action {
+            width: clamp(54px, 14vw, 80px);
+            height: clamp(54px, 14vw, 80px);
+            border: 4px solid #443f3b;
+            border-radius: 50%;
+            color: #fff6d7;
+            font: bold 1.3rem "Courier New", monospace;
+            cursor: pointer;
+            touch-action: manipulation;
+            background: #c94d64;
+            box-shadow: inset 3px 3px #f28091, 3px 4px #4c4540;
+        }
+
+        .gameboy-action:active { transform: translateY(2px); box-shadow: inset 3px 3px #a93b50, 1px 2px #4c4540; }
+        .gameboy-exit { background: #596b4c; }
+
         .controls-title {
             margin: 24px 0 12px;
             font-size: .8rem;
@@ -113,6 +187,7 @@
         }
 
         .keyboard {
+            position: relative;
             display: inline-flex;
             gap: 18px;
             align-items: end;
@@ -145,11 +220,15 @@
             color: #fff6d7;
             font-size: .72rem;
             font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
             background: linear-gradient(135deg, #716453, #3f362d);
             box-shadow: inset 2px 2px #9c8c72, 2px 3px #30271f;
         }
 
-        .key.active { color: #3b281a; background: linear-gradient(135deg, #ffe174, var(--orange)); }
+        .key.active, .key:active { color: #3b281a; background: linear-gradient(135deg, #ffe174, var(--orange)); }
         .up { grid-column: 2; }
         .left { grid-column: 1; }
         .down { grid-column: 2; }
@@ -228,12 +307,24 @@
         .modal-content ul { padding-left: 20px; font-size: .78rem; line-height: 1.6; }
         .close-button { float: right; border: 0; color: #fff6d7; padding: 7px 11px; font: bold .7rem "Courier New", monospace; cursor: pointer; background: #b63e29; }
 
-        @media (max-width: 490px) {
+        @media (max-width: 576px) {
+            .arcade { width: 100%; padding: 16px 10px 24px; }
+            h1 { margin-bottom: 12px; }
+            .monitor { padding: 10px 10px 38px; border-width: 6px; border-radius: 22px 22px 12px 12px; box-shadow: inset 3px 3px 0 #fff3d6, inset -4px -5px 0 var(--cabinet-shadow), 6px 7px 0 #735f49; }
+            .screen { aspect-ratio: 680 / 500; border-width: 7px; border-radius: 12px; }
+            .gameboy-toggle { top: 12px; right: 12px; }
             .keyboard { gap: 10px; padding: 12px; }
-            .control-bar { gap: 10px; align-items: end; }
+            .control-bar { display: grid; grid-template-columns: auto auto; justify-content: center; justify-items: center; gap: 18px; align-items: center; }
+            .keyboard { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
+            .info-button { grid-column: 1; grid-row: 2; align-self: center; justify-self: center; }
+            .mouse-tip { grid-column: 2; grid-row: 2; align-self: center; justify-self: center; }
             .arrow-keys { grid-template-columns: repeat(3, 34px); }
             .key { height: 34px; font-size: .62rem; }
             .mouse-tip { width: 65px; font-size: .5rem; }
+        }
+
+        @media (max-width: 380px) {
+            .space { width: 116px; }
         }
     </style>
 </head>
@@ -242,31 +333,35 @@
         <h1>Flash Exterminator</h1>
         <section class="monitor" aria-label="Tela do jogo">
             <div class="screen">
-                <object
-                    data="assets/prj-nave (1).swf"
-                    type="application/x-shockwave-flash"
-                    width="680"
-                    height="500"
-                    aria-label="Jogo Flash Exterminator">
-                    <param name="movie" value="assets/prj-nave (1).swf">
-                    <param name="quality" value="high">
-                    <param name="scale" value="exactfit">
-                    Seu navegador não conseguiu iniciar o emulador de Flash.
-                </object>
+                <div id="game-player" aria-label="Jogo Flash Exterminator"></div>
+            </div>
+            <div class="gameboy-controls" aria-label="Controles do modo Game Boy">
+                <div class="arrow-keys">
+                    <button class="key up" type="button" data-key="ArrowUp" aria-label="Mover para cima">↑</button>
+                    <button class="key left" type="button" data-key="ArrowLeft" aria-label="Mover para a esquerda">←</button>
+                    <button class="key down" type="button" data-key="ArrowDown" aria-label="Mover para baixo">↓</button>
+                    <button class="key right" type="button" data-key="ArrowRight" aria-label="Mover para a direita">→</button>
+                </div>
+                <button class="gameboy-start" type="button" aria-label="Voltar ao modo Monitor">Modo Monitor</button>
+                <div class="gameboy-actions">
+                    <button class="gameboy-action" type="button" data-key="Space" aria-label="Pular">A</button>
+                    <button class="gameboy-action gameboy-exit" type="button" aria-label="Sair do modo Game Boy">B</button>
+                </div>
             </div>
         </section>
 
         <p class="controls-title">CONTROLES</p>
         <div class="control-bar">
             <button class="info-button" type="button" aria-label="Informações sobre o projeto" aria-controls="project-info">i</button>
-            <section class="keyboard" aria-label="Teclado: setas para mover e espaço para atirar">
-                <div class="arrow-keys" aria-hidden="true">
-                    <span class="key active up">↑</span>
-                    <span class="key active left">←</span>
-                    <span class="key active down">↓</span>
-                    <span class="key active right">→</span>
+            <section class="keyboard" aria-label="Controles do jogo">
+                <div class="arrow-keys">
+                    <button class="key active up" type="button" data-key="ArrowUp" aria-label="Mover para cima">↑</button>
+                    <button class="key active left" type="button" data-key="ArrowLeft" aria-label="Mover para a esquerda">←</button>
+                    <button class="key active down" type="button" data-key="ArrowDown" aria-label="Mover para baixo">↓</button>
+                    <button class="key active right" type="button" data-key="ArrowRight" aria-label="Mover para a direita">→</button>
                 </div>
-                <span class="key active space">ESPAÇO</span>
+                <button class="key active space" type="button" data-key="Space" aria-label="Atirar">ESPAÇO</button>
+                <button class="gameboy-toggle" type="button" aria-label="Abrir modo Game Boy em tela cheia">GAME BOY</button>
             </section>
             <div class="mouse-tip" aria-label="Use o botão esquerdo do mouse para interagir com os botões">
                 <div class="mouse" aria-hidden="true"></div>
@@ -280,13 +375,17 @@
             <button class="close-button" type="button">FECHAR</button>
             <h2 id="project-info-title">Sobre o projeto</h2>
             <p>Flash Exterminator é um jogo espacial criado em Adobe Flash e executado no navegador pelo emulador Ruffle. Ele foi desenvolvido como projeto da disciplina Desenvolvimento de Jogos para Web I, do curso técnico em Jogos Digitais no ano de 2016.</p>
-            <p>Use as setas para movimentar a nave e a barra de espaço para atirar. Clique no jogo uma vez para ativar o áudio e dar foco aos controles.</p>
-            <h2>Requisitos mínimos</h2>
+            <h2>Como jogar</h2>
             <ul>
-                <li>Navegador atualizado com WebAssembly habilitado.</li>
-                <li>Conexão com a internet para carregar o Ruffle.</li>
-                <li>Executar o projeto por um servidor local, como o Live Server.</li>
-                <li>Teclado para controlar a nave.</li>
+                <li>Use as setas para movimentar a nave.</li>
+                <li>Pressione a barra de espaço para atirar.</li>
+                <li>Clique dentro da tela uma vez para ativar o áudio e dar foco aos controles.</li>
+            </ul>
+            <h2>Modos de jogo</h2>
+            <ul>
+                <li><strong>Monitor:</strong> jogue na visualização padrão, com controles pelo teclado.</li>
+                <li><strong>Game Boy:</strong> abra o modo portátil para jogar com direcional e botão A na tela.</li>
+                <li>Use START ou B para voltar ao modo Monitor.</li>
             </ul>
         </div>
     </dialog>
@@ -294,11 +393,78 @@
         const infoButton = document.querySelector('.info-button');
         const infoDialog = document.querySelector('#project-info');
         const closeButton = infoDialog.querySelector('.close-button');
+        const gameContainer = document.querySelector('#game-player');
+        const monitor = document.querySelector('.monitor');
+        const gameboyToggle = document.querySelector('.gameboy-toggle');
+        const gameboyExit = document.querySelector('.gameboy-exit');
+        const gameboyStart = document.querySelector('.gameboy-start');
+
+        const ruffle = window.RufflePlayer?.newest();
+        if (ruffle) {
+            const player = ruffle.createPlayer();
+            player.style.width = '100%';
+            player.style.height = '100%';
+            player.setAttribute('aria-label', 'Jogo Flash Exterminator');
+            gameContainer.append(player);
+            player.load('assets/prj-nave (1).swf');
+        } else {
+            gameContainer.textContent = 'Não foi possível carregar o emulador do jogo.';
+        }
 
         infoButton.addEventListener('click', () => infoDialog.showModal());
         closeButton.addEventListener('click', () => infoDialog.close());
         infoDialog.addEventListener('click', (event) => {
             if (event.target === infoDialog) infoDialog.close();
+        });
+
+        gameboyToggle.addEventListener('click', () => monitor.requestFullscreen());
+        gameboyExit.addEventListener('click', () => document.exitFullscreen());
+        gameboyStart.addEventListener('click', () => document.exitFullscreen());
+
+        const controlKeys = {
+            ArrowUp: { key: 'ArrowUp', code: 'ArrowUp' },
+            ArrowLeft: { key: 'ArrowLeft', code: 'ArrowLeft' },
+            ArrowDown: { key: 'ArrowDown', code: 'ArrowDown' },
+            ArrowRight: { key: 'ArrowRight', code: 'ArrowRight' },
+            Space: { key: ' ', code: 'Space' }
+        };
+
+        function sendGameKey(keyName, type) {
+            const target = document.querySelector('ruffle-player') || document.querySelector('.screen');
+            const key = controlKeys[keyName];
+
+            target.focus();
+            target.dispatchEvent(new KeyboardEvent(type, { ...key, bubbles: true }));
+        }
+
+        document.querySelectorAll('[data-key]').forEach((button) => {
+            let isPressed = false;
+            let wasPointerActivated = false;
+            const release = () => {
+                if (!isPressed) return;
+                isPressed = false;
+                sendGameKey(button.dataset.key, 'keyup');
+            };
+
+            button.addEventListener('pointerdown', (event) => {
+                event.preventDefault();
+                if (isPressed) return;
+                isPressed = true;
+                wasPointerActivated = true;
+                button.setPointerCapture(event.pointerId);
+                sendGameKey(button.dataset.key, 'keydown');
+            });
+            button.addEventListener('pointerup', release);
+            button.addEventListener('pointercancel', release);
+            button.addEventListener('lostpointercapture', release);
+            button.addEventListener('click', () => {
+                if (wasPointerActivated) {
+                    wasPointerActivated = false;
+                    return;
+                }
+                sendGameKey(button.dataset.key, 'keydown');
+                sendGameKey(button.dataset.key, 'keyup');
+            });
         });
     </script>
 </body>
