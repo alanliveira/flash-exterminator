@@ -27,6 +27,10 @@
 
 Além do modo padrão, a interface oferece um modo **Game Boy** em tela cheia e pode ser instalada como aplicativo graças ao suporte a PWA.
 
+## Desenvolvimento da página
+
+A interface web desta versão foi construída com o auxílio de IA, usando o Codex da OpenAI.
+
 ## Como jogar
 
 - Use as setas direcionais para mover a nave.
